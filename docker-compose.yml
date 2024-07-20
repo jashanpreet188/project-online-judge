@@ -1,0 +1,15 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    # Add any necessary environment variables or volumes
+
+  compiler:
+    build:
+      context: ./compiler
+    ports:
+      - "5000:5000"
+    # Add any necessary environment variables or volumes

@@ -1,62 +1,50 @@
-const express= require('express');
-const app=express();
-const { DBConnection } = require("./database/db.js");
-const User =require('./models/User.js');
-var bcrypt = require('bcryptjs');
-const jwt = require("jsonwebtoken");
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+require('dotenv').config();
 
+const app = express();
 
+// Middleware
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
-DBConnection();
-app.get("/", (req,res)=>{
-    res.send("Welcome !, I'm Live");
-});
-
-app.post("/register",async (req,res)=>{
-    req.body;
-    try{
-        //get all the data
-        const {firstname, lastname, email, password} = req.body;
-
-        //check whether all the data exist
-        if(!(firstname && lastname && email && password)){
-            return res.status(400).send("Please enter all the details");
-        }
-        //check if user already exists
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(200).send("User already exists!");
-        }
-        //encrypt password
-        const hashedPassword = await bcrypt.hashSync(password, 10);
-        //save the user
-        const user = await User.create({
-            firstname,
-            lastname,
-            email,
-            password: hashedPassword,
-        });
-
-        //generate and send token
-        const token = jwt.sign({ id: user._id, email }, process.env.SECRET_KEY, {
-            expiresIn: "1d",
-        });
-        user.token = token;
-        user.password = undefined;
-        res
-            .status(200)
-            .json({ message: "You have successfully registered!", user });
-    } 
-    
-    catch(error){
-        console.error(error);
-    }
-});
-app.listen(8000,()=>{
-    console.log("Server is running on 8000");
+// Connect to MongoDB
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://mongo:27017/your_database_name';
+mongoose.connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
 })
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('Could not connect to MongoDB', err));
 
+// Routes
+const authRoutes = require('./routes/auth');
+const problemRoutes = require('./routes/problems');
+const submissionRoutes = require('./routes/submissions');
+const userRoutes = require('./routes/user');
 
+app.use('/auth', authRoutes);
+app.use('/problems', problemRoutes);
+app.use('/submissions', submissionRoutes);
+app.use('/user', userRoutes);
+
+// Basic route for testing
+app.get('/', (req, res) => {
+    res.json({ message: "Welcome to the CodeMaster API" });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running on port ${PORT}`);
+    console.log(`http://localhost:${PORT}`);
+});
+
+module.exports = app; // For testing purposes
