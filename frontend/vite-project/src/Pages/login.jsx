@@ -19,7 +19,7 @@ const Login = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:8000/auth/login', {
+            const response = await axios.post('http://13.127.204.187:8000/auth/login', {
                 email,
                 password,
             });

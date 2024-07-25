@@ -18,7 +18,7 @@ router.post('/', authMiddleware, async (req, res) => {
         }
 
         // Send the code and test cases to the compiler service
-        const compilerServiceUrl = 'http://compiler:5000';
+        const compilerServiceUrl = 'http://3.110.84.103:5000';
         const compilerResponse = await axios.post(`${compilerServiceUrl}/submit`, {
             language,
             code,

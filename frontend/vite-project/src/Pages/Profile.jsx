@@ -42,13 +42,13 @@ const Profile = () => {
         console.log('User token:', token);
 
         const [profileResponse, statsResponse, problemsResponse] = await Promise.all([
-          axios.get('http://localhost:8000/user/profile', {
+          axios.get('http://13.127.204.187:8000/user/profile', {
             headers: { Authorization: `Bearer ${token}` }
           }),
-          axios.get('http://localhost:8000/user/stats', {
+          axios.get('http://13.127.204.187:8000/user/stats', {
             headers: { Authorization: `Bearer ${token}` }
           }),
-          axios.get('http://localhost:8000/user/submitted-problems', {
+          axios.get('http://13.127.204.187:8000/user/submitted-problems', {
             headers: { Authorization: `Bearer ${token}` }
           })
         ]);

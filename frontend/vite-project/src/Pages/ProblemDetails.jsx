@@ -32,7 +32,7 @@ const ProblemDetails = () => {
       }
 
       try {
-        const response = await axios.get(`http://localhost:8000/problems/${id}`);
+        const response = await axios.get(`http://13.127.204.187:8000/problems/${id}`);
         setProblem(response.data);
         setLoading(false);
       } catch (err) {
@@ -52,7 +52,7 @@ const ProblemDetails = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:5000/run', { 
+      const response = await axios.post('http://3.110.84.103:5000/run', { 
         language, 
         code, 
         input: userInput
@@ -72,20 +72,20 @@ const ProblemDetails = () => {
 
     setSubmitting(true);
     try {
-      const response = await axios.post('http://localhost:5000/submit', {
+      const response = await axios.post('http://3.110.84.103:5000/submit', {
         problemId: id,
         code,
         language,
         testCases: problem.testCases
       });
-      const compilerResponse = await axios.post('http://localhost:5000/submit', {
+      const compilerResponse = await axios.post('http://3.110.84.103:5000/submit', {
         problemId: id,
         code,
         language,
         testCases: problem.testCases
       });
       const { status, message } = compilerResponse.data;
-      const submissionResponse = await axios.post('http://localhost:8000/submissions', {
+      const submissionResponse = await axios.post('http://13.127.204.187:8000/submissions', {
         problemId: id,
         code,
         language,
@@ -107,7 +107,7 @@ const ProblemDetails = () => {
         status: 'Runtime Error',
         message: 'An unexpected error occurred during submission.'
       });
-      const submissionsResponse = await axios.get('http://localhost:8000/submissions/user');
+      const submissionsResponse = await axios.get('http://13.127.204.187:8000/submissions/user');
       // Update state with recent submissions
       // setRecentSubmissions(submissionsResponse.data);
     } finally {

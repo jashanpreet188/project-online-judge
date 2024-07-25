@@ -11,7 +11,7 @@ const EditProfile = ({ profile, onSave, onCancel }) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.put('http://localhost:8000/user/profile', 
+      const response = await axios.put('http://13.127.204.187:8000/user/profile', 
         { name, email },
         { headers: { Authorization: `Bearer ${token}` } }
       );
